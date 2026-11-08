@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Electronics - ReVolt Vast Catalog</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .cat-pill {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .cat-pill:hover, .cat-pill.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .compare-dock {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--bg-card);
+      border: 2px solid var(--primary);
+      box-shadow: var(--shadow-lg);
+      border-radius: var(--radius-lg);
+      padding: 14px 24px;
+      z-index: 900;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .compare-dock.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+    .star-rating {
+      color: #f59e0b;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" style="padding: 30px 20px;">
+    
+    <!-- Header -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
+      <div>
+        <span class="badge badge-success" style="margin-bottom:6px;">⚡ 100% Guaranteed Doorstep Swap</span>
+        <h1>Flagship Electronics Catalog</h1>
+        <p style="color:var(--text-muted);">
+          Redeem your ReVolt trade-in points for up to 30% instant discount across all products.
+        </p>
+      </div>
+
+      <!-- Live Search & Sort Controls -->
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <input type="text" id="shop-search" class="form-control" placeholder="Search title, brand, chip..." style="width:260px;" oninput="applyFilters()">
+        
+        <select id="shop-brand-filter" class="form-control" style="width:150px;" onchange="applyFilters()">
+          <option value="">All Brands</option>
+        </select>
+
+        <select id="shop-sort" class="form-control" style="width:170px;" onchange="applyFilters()">
+          <option value="default">Sort by: Featured</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="rating">Highest Rated ★</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Category Chips Carousel -->
+    <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:12px; margin-bottom:24px;" id="cat-chips-container">
+      <button class="cat-pill active" onclick="selectCategory('ALL', this)">All Categories</button>
+      <button class="cat-pill" onclick="selectCategory('Smartphones', this)">📱 Smartphones</button>
+      <button class="cat-pill" onclick="selectCategory('Laptops', this)">💻 Laptops</button>
+      <button class="cat-pill" onclick="selectCategory('Tablets', this)">🖊️ Tablets</button>
+      <button class="cat-pill" onclick="selectCategory('Audio', this)">🎧 Audio & Sound</button>
+      <button class="cat-pill" onclick="selectCategory('Wearables', this)">⌚ Wearables</button>
+      <button class="cat-pill" onclick="selectCategory('Gaming', this)">🎮 Gaming Consoles</button>
+      <button class="cat-pill" onclick="selectCategory('Cameras', this)">📷 Cameras & Drones</button>
+    </div>
+
+    <!-- Active Trade-In Points Banner -->
+    <div id="points-banner" class="card" style="margin-bottom:30px; background:linear-gradient(135deg, #ecfdf5, #eff6ff); border:1px solid #bbf7d0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+      <div>
+        <span class="badge badge-success">Points Active in Wallet</span>
+        <h3 style="margin-top:6px; color:#065f46;">
+          You have <span id="banner-points">15,000</span> ReVolt Points Available
+        </h3>
+        <p style="font-size:0.88rem; color:#047857; margin:0;">
+          Redeem at checkout for ₹<span id="banner-rupees">15,000</span> instant off with your doorstep old device swap!
+        </p>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <a href="/tradein.html" class="btn btn-primary btn-sm">+ Trade In More Devices</a>
+        <a href="/cart.html" class="btn btn-secondary btn-sm">View Cart 🛒</a>
+      </div>
+    </div>
+
+    <!-- Catalog Results Counter & Active Filter Badge -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <span style="font-size:0.9rem; color:var(--text-muted);" id="results-count">Showing all products...</span>
+      <button class="btn btn-secondary btn-sm" onclick="clearAllFilters()">Reset Filters</button>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="product-grid" class="grid grid-cols-3">
+      <!-- Injected via JavaScript -->
+    </div>
+
+  </div>
+
+  <!-- Floating Compare Products Dock -->
+  <div id="compare-dock" class="compare-dock">
+    <div>
+      <b id="compare-count">0 Products</b> selected for comparison
+      <span style="font-size:0.8rem; color:var(--text-muted); display:block;">Select up to 3 items to inspect specs</span>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-primary btn-sm" onclick="openComparisonModal()">Compare Side-by-Side ⚖️</button>
+      <button class="btn btn-secondary btn-sm" onclick="clearComparison()">Clear</button>
+    </div>
+  </div>
+
+  <!-- Product Quick View Modal -->
+  <div id="quickview-modal" class="modal-overlay">
+    <div class="modal" style="max-width:720px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+        <h3 id="qv-title" style="margin:0;">Product Details</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeQuickView()">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2" style="gap:24px; margin-bottom:20px;">
+        <div>
+          <img id="qv-img" src="" style="width:100%; height:260px; object-fit:cover; border-radius:var(--radius-md);">
+        </div>
+        <div>
+          <span id="qv-brand-badge" class="badge badge-info" style="margin-bottom:8px;">Brand</span>
+          <div id="qv-price" style="font-size:1.6rem; font-weight:800; color:var(--primary); margin:6px 0;">₹0</div>
+          <div class="product-points-hint" id="qv-points-hint" style="margin-bottom:12px;"></div>
+          <p id="qv-desc" style="font-size:0.88rem; color:var(--text-muted); margin-bottom:16px;"></p>
+          <button id="qv-add-cart-btn" class="btn btn-primary btn-block">Add to Cart 🛒</button>
+        </div>
+      </div>
+
+      <h4 style="margin-bottom:10px;">Technical Specifications</h4>
+      <div id="qv-specs-table" style="background:var(--bg-main); padding:14px; border-radius:var(--radius-md); font-size:0.85rem;">
+        <!-- Specs rows -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Side-by-Side Comparison Modal -->
+  <div id="comparison-modal" class="modal-overlay">
+    <div class="modal" style="max-width:960px; width:95%;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+        <h3>Side-by-Side Product Comparison ⚖️</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeComparisonModal()">✕</button>
+      </div>
+
+      <div id="comparison-content" style="overflow-x:auto;">
+        <!-- Injected Comparison Table -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/shop.js"></script>
+</body>
+</html>

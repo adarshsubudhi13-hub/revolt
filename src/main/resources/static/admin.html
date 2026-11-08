@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Operations Center - ReVolt</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="container" style="padding: 30px 20px; max-width: 1200px;">
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <div>
+        <span class="badge badge-info" style="margin-bottom:6px;">⚙️ ADMIN DASHBOARD</span>
+        <h1>Platform Operations & Reconciliations</h1>
+      </div>
+      <button class="btn btn-primary" onclick="openAddProductModal()">+ Add New Catalog Product</button>
+    </div>
+
+    <!-- Analytics KPIs -->
+    <div class="grid grid-cols-4" style="margin-bottom:30px;">
+      <div class="card">
+        <span style="font-size:0.8rem; color:var(--text-muted);">Total GMV Revenue</span>
+        <div id="stat-revenue" style="font-size:1.8rem; font-weight:800; color:var(--primary); margin:6px 0;">₹0</div>
+        <span id="stat-orders" style="font-size:0.8rem; color:var(--text-muted);">0 Orders</span>
+      </div>
+
+      <div class="card">
+        <span style="font-size:0.8rem; color:var(--text-muted);">Trade-Ins Recirculated</span>
+        <div id="stat-tradeins" style="font-size:1.8rem; font-weight:800; color:var(--accent); margin:6px 0;">0</div>
+        <span id="stat-mismatches" style="font-size:0.8rem; color:var(--danger);">0 Mismatches Flagged</span>
+      </div>
+
+      <div class="card">
+        <span style="font-size:0.8rem; color:var(--text-muted);">Total Points Redeemed</span>
+        <div id="stat-points-redeemed" style="font-size:1.8rem; font-weight:800; color:#b45309; margin:6px 0;">0 pts</div>
+        <span style="font-size:0.8rem; color:var(--text-muted);">1 pt = ₹1 INR</span>
+      </div>
+
+      <div class="card">
+        <span style="font-size:0.8rem; color:var(--text-muted);">Eco Impact (E-Waste / CO2)</span>
+        <div id="stat-eco" style="font-size:1.6rem; font-weight:800; color:var(--success); margin:6px 0;">0 kg / 0 kg</div>
+        <span style="font-size:0.8rem; color:var(--text-muted);">Circular Tech Diverted</span>
+      </div>
+    </div>
+
+    <!-- Tab navigation -->
+    <div style="display:flex; gap:12px; margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+      <button id="tab-btn-orders" class="btn btn-secondary btn-sm" onclick="switchAdminTab('orders')">Orders & Deliveries</button>
+      <button id="tab-btn-reports" class="btn btn-secondary btn-sm" onclick="switchAdminTab('reports')">Inspection & Mismatch Audits</button>
+      <button id="tab-btn-emails" class="btn btn-secondary btn-sm" onclick="switchAdminTab('emails')">Transactional Email Logs</button>
+    </div>
+
+    <!-- TAB 1: Orders Table -->
+    <div id="admin-tab-orders" class="card" style="padding:0; overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+        <thead style="background:var(--bg-main); border-bottom:1px solid var(--border-color);">
+          <tr>
+            <th style="padding:14px;">Order #</th>
+            <th style="padding:14px;">Customer / Phone</th>
+            <th style="padding:14px;">Product</th>
+            <th style="padding:14px;">Total Paid</th>
+            <th style="padding:14px;">Trade-In Swap</th>
+            <th style="padding:14px;">Status</th>
+            <th style="padding:14px;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="orders-table-body">
+          <!-- Rendered via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TAB 2: Inspection Reports Table -->
+    <div id="admin-tab-reports" class="card" style="padding:0; overflow-x:auto; display:none;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+        <thead style="background:var(--bg-main); border-bottom:1px solid var(--border-color);">
+          <tr>
+            <th style="padding:14px;">Audit ID</th>
+            <th style="padding:14px;">Order ID</th>
+            <th style="padding:14px;">Outcome</th>
+            <th style="padding:14px;">Audited Grade</th>
+            <th style="padding:14px;">Discrepancy Reason</th>
+            <th style="padding:14px;">Extra Cash Collected</th>
+            <th style="padding:14px;">Notes</th>
+          </tr>
+        </thead>
+        <tbody id="reports-table-body">
+          <!-- Rendered via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TAB 3: Email Logs Table -->
+    <div id="admin-tab-emails" class="card" style="padding:0; overflow-x:auto; display:none;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+        <thead style="background:var(--bg-main); border-bottom:1px solid var(--border-color);">
+          <tr>
+            <th style="padding:14px;">Timestamp</th>
+            <th style="padding:14px;">Recipient</th>
+            <th style="padding:14px;">Email Event Type</th>
+            <th style="padding:14px;">Subject</th>
+            <th style="padding:14px;">Status</th>
+          </tr>
+        </thead>
+        <tbody id="emails-table-body">
+          <!-- Rendered via JS -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Add Product Modal -->
+  <div id="product-modal" class="modal-overlay">
+    <div class="modal">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3>Add New Electronics Product</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeAddProductModal()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Product Title</label>
+        <input type="text" id="prod-title" class="form-control" placeholder="e.g. Google Pixel 9 Pro (256 GB)">
+      </div>
+
+      <div class="grid grid-cols-2">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="prod-category" class="form-control">
+            <option value="Smartphones">Smartphones</option>
+            <option value="Laptops">Laptops</option>
+            <option value="Audio">Audio</option>
+            <option value="Wearables">Wearables</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Brand</label>
+          <input type="text" id="prod-brand" class="form-control" placeholder="e.g. Google">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price (INR)</label>
+          <input type="number" id="prod-price" class="form-control" placeholder="109900">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Stock Quantity</label>
+          <input type="number" id="prod-stock" class="form-control" value="15">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Image URL</label>
+        <input type="text" id="prod-img" class="form-control" placeholder="https://images.unsplash.com/...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea id="prod-desc" class="form-control" rows="2" placeholder="Specifications, chip, cameras..."></textarea>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" onclick="saveNewProduct()">Save & Publish to Store</button>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

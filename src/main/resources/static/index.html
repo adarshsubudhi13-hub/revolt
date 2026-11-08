@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReVolt - Trade In Old Electronics, Buy New with Points</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <span class="badge badge-success" style="margin-bottom:14px;">⚡ Instant Doorstep Swap & Save</span>
+      <h1>Turn Your Old Tech Into <br><span class="hero-highlight">Instant Discount Points</span></h1>
+      <p>
+        Get upfront reward points for your phone, laptop, or tablet. Apply points at checkout to discount new premium electronics, and hand over your old device during delivery!
+      </p>
+      <div style="display:flex; justify-content:center; gap:14px; margin-bottom: 40px;">
+        <a href="/tradein.html" class="btn btn-primary btn-lg">Estimate Trade-in Value</a>
+        <a href="/shop.html" class="btn btn-secondary btn-lg">Browse New Products</a>
+      </div>
+
+      <!-- Quick Valuation Widget -->
+      <div class="card" style="max-width: 820px; margin: 0 auto; text-align: left; padding: 30px;">
+        <h3 style="margin-bottom: 18px; display:flex; align-items:center; gap:8px;">
+          <span>🔍</span> Quick Trade-In Estimator
+        </h3>
+        <div class="grid grid-cols-3" style="margin-bottom: 20px;">
+          <div>
+            <label class="form-label">Category</label>
+            <select id="quick-category" class="form-control" onchange="loadQuickModels()">
+              <option value="Smartphones">Smartphones</option>
+              <option value="Laptops">Laptops</option>
+              <option value="Tablets">Tablets</option>
+              <option value="Audio">Audio & Headphones</option>
+              <option value="Wearables">Wearables & Watches</option>
+              <option value="Gaming">Gaming Consoles</option>
+              <option value="Cameras">Cameras & Drones</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Model</label>
+            <select id="quick-model" class="form-control">
+              <option value="iPhone 16 Pro Max">Apple iPhone 16 Pro Max</option>
+              <option value="iPhone 15 Pro">Apple iPhone 15 Pro</option>
+              <option value="iPhone 14">Apple iPhone 14</option>
+              <option value="Galaxy S24 Ultra">Samsung Galaxy S24 Ultra</option>
+              <option value="OnePlus 12">OnePlus 12</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Condition</label>
+            <select id="quick-condition" class="form-control">
+              <option value="GRADE_A">Grade A (Flawless / Like New)</option>
+              <option value="GRADE_B" selected>Grade B (Good / Minor Scratches)</option>
+              <option value="GRADE_C">Grade C (Average / Scratched)</option>
+              <option value="GRADE_D">Grade D (Screen Cracked)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-main); padding:16px 20px; border-radius:var(--radius-md);">
+          <div>
+            <span style="font-size:0.85rem; color:var(--text-muted); display:block;">Estimated Instant Trade-In Value:</span>
+            <div id="quick-result" style="font-size:1.6rem; font-weight:800; color:var(--primary);">
+              ₹36,400 <span style="font-size:1rem; font-weight:600; color:#b45309;">(36,400 ReVolt Points)</span>
+            </div>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Locked for 7 days upon listing</span>
+          </div>
+          <button class="btn btn-primary" onclick="goToTradeIn()">Lock This Price & Trade In</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Eco Impact Stats -->
+  <section style="background:var(--bg-card); padding:50px 0; border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); margin-bottom:50px;">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:30px;">
+        <span class="badge badge-info">🌱 Circular Tech Mission</span>
+        <h2 style="font-size:1.8rem; margin-top:8px;">Real-Time Platform Environmental Impact</h2>
+      </div>
+      <div class="grid grid-cols-4" style="text-align:center;">
+        <div class="card">
+          <div style="font-size:2rem; font-weight:800; color:var(--primary);" id="stat-ewaste">1,420 kg</div>
+          <p style="color:var(--text-muted); font-size:0.9rem;">E-Waste Kept From Landfills</p>
+        </div>
+        <div class="card">
+          <div style="font-size:2rem; font-weight:800; color:var(--accent);" id="stat-co2">241,800 kg</div>
+          <p style="color:var(--text-muted); font-size:0.9rem;">CO2 Emissions Prevented</p>
+        </div>
+        <div class="card">
+          <div style="font-size:2rem; font-weight:800; color:var(--warning);" id="stat-devices">5,680+</div>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Electronics Recirculated</p>
+        </div>
+        <div class="card">
+          <div style="font-size:2rem; font-weight:800; color:var(--success);" id="stat-points">₹4.8 Cr+</div>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Points Redeemed by Users</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="container" style="margin-bottom:60px;">
+    <div style="text-align:center; margin-bottom:40px;">
+      <h2>How ReVolt Doorstep Swap Works</h2>
+      <p style="color:var(--text-muted);">No shipping kits, no waiting 10 days for bank payouts.</p>
+    </div>
+
+    <div class="grid grid-cols-3">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:12px;">📱</div>
+        <h3 style="margin-bottom:8px;">1. List & Get 7-Day Price Lock</h3>
+        <p style="color:var(--text-muted); font-size:0.92rem;">
+          Enter your device specs and upload photos. Get instant points credited to your wallet with guaranteed 7-day price protection.
+        </p>
+      </div>
+
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:12px;">🛒</div>
+        <h3 style="margin-bottom:8px;">2. Buy New with Discount</h3>
+        <p style="color:var(--text-muted); font-size:0.92rem;">
+          Pick brand-new smartphones or laptops. Apply your trade-in points at checkout (up to 30% off) and pay only the difference.
+        </p>
+      </div>
+
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:12px;">🤝</div>
+        <h3 style="margin-bottom:8px;">3. Doorstep Inspection & Swap</h3>
+        <p style="color:var(--text-muted); font-size:0.92rem;">
+          The delivery agent brings your new device and inspects your old device at your doorstep. If everything matches, your discount is locked in!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Store Products -->
+  <section class="container" style="margin-bottom:70px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <div>
+        <h2>Featured New Electronics</h2>
+        <p style="color:var(--text-muted);">Eligible for instant points redemption</p>
+      </div>
+      <a href="/shop.html" class="btn btn-secondary">View All Catalog &rarr;</a>
+    </div>
+
+    <div id="featured-products" class="grid grid-cols-3">
+      <!-- Injected via JavaScript -->
+    </div>
+  </section>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script>
+    const QUICK_MODELS = {
+      Smartphones: [
+        { brand: "Apple", model: "iPhone 16 Pro Max" },
+        { brand: "Apple", model: "iPhone 15 Pro" },
+        { brand: "Samsung", model: "Galaxy S24 Ultra" },
+        { brand: "OnePlus", model: "OnePlus 12" },
+        { brand: "Google", model: "Pixel 9 Pro" }
+      ],
+      Laptops: [
+        { brand: "Apple", model: "MacBook Pro 16 M3 Max" },
+        { brand: "Apple", model: "MacBook Air 15 M2" },
+        { brand: "Dell", model: "XPS 15" },
+        { brand: "Lenovo", model: "ThinkPad X1 Carbon" }
+      ],
+      Tablets: [
+        { brand: "Apple", model: "iPad Pro 13 M4" },
+        { brand: "Samsung", model: "Galaxy Tab S9 Ultra" },
+        { brand: "OnePlus", model: "OnePlus Pad 2" }
+      ],
+      Audio: [
+        { brand: "Sony", model: "WH-1000XM5" },
+        { brand: "Bose", model: "QuietComfort Ultra" },
+        { brand: "Apple", model: "AirPods Max" }
+      ],
+      Wearables: [
+        { brand: "Apple", model: "Watch Ultra 2" },
+        { brand: "Samsung", model: "Galaxy Watch 6 Classic" },
+        { brand: "Garmin", model: "Fenix 7 Pro" }
+      ],
+      Gaming: [
+        { brand: "Sony", model: "PlayStation 5 Slim" },
+        { brand: "Microsoft", model: "Xbox Series X" },
+        { brand: "Nintendo", model: "Switch OLED" }
+      ],
+      Cameras: [
+        { brand: "Sony", model: "A7 IV" },
+        { brand: "DJI", model: "Mini 4 Pro" }
+      ]
+    };
+
+    function loadQuickModels() {
+      const cat = document.getElementById('quick-category').value;
+      const select = document.getElementById('quick-model');
+      const list = QUICK_MODELS[cat] || QUICK_MODELS.Smartphones;
+
+      select.innerHTML = list.map(item => `
+        <option value="${item.model}" data-brand="${item.brand}">
+          ${item.brand} ${item.model}
+        </option>
+      `).join('');
+
+      calculateQuickValue();
+    }
+
+    async function calculateQuickValue() {
+      const modelSelect = document.getElementById('quick-model');
+      const selectedOpt = modelSelect.options[modelSelect.selectedIndex];
+      const model = modelSelect.value;
+      const brand = selectedOpt ? selectedOpt.getAttribute('data-brand') || "Apple" : "Apple";
+      const condition = document.getElementById('quick-condition').value;
+
+      try {
+        const res = await Revolt.request('/tradein/calculate-valuation', {
+          method: 'POST',
+          body: JSON.stringify({
+            brand: brand,
+            model: model,
+            ageMonths: 12,
+            conditionGrade: condition,
+            hasOriginalBox: true,
+            hasOriginalCharger: true,
+            hasValidBill: true
+          })
+        });
+
+        document.getElementById('quick-result').innerHTML = `
+          ${Revolt.formatRupees(res.estimatedRupees)} 
+          <span style="font-size:1rem; font-weight:600; color:#b45309;">(${res.estimatedPoints.toLocaleString()} ReVolt Points)</span>
+        `;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function goToTradeIn() {
+      window.location.href = '/tradein.html';
+    }
+
+    async function loadFeaturedProducts() {
+      try {
+        const products = await Revolt.request('/products');
+        const container = document.getElementById('featured-products');
+        container.innerHTML = products.slice(0, 6).map(p => `
+          <div class="card product-card">
+            <img src="${p.imageUrl}" alt="${p.title}" class="product-img">
+            <span class="badge badge-info" style="align-self:flex-start; margin-bottom:8px;">${p.category}</span>
+            <h3 class="product-title">${p.title}</h3>
+            <div class="product-price">${Revolt.formatRupees(p.price)}</div>
+            <div class="product-points-hint">
+              💎 Pay up to <b>${Math.round(p.price * 0.3).toLocaleString()} pts</b> off
+            </div>
+            <a href="/shop.html" class="btn btn-primary btn-block" style="margin-top:auto;">
+              View & Buy with Points
+            </a>
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadQuickModels();
+      loadFeaturedProducts();
+      document.getElementById('quick-model').addEventListener('change', calculateQuickValue);
+      document.getElementById('quick-condition').addEventListener('change', calculateQuickValue);
+    });
+  </script>
+</body>
+</html>
