@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Agent Doorstep Portal - ReVolt</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="container" style="padding: 30px 20px; max-width: 950px;">
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <div>
+        <span class="badge badge-warning" style="margin-bottom:6px;">🛵 FIELD INSPECTOR PORTAL</span>
+        <h1>Doorstep Inspection & Delivery Runs</h1>
+      </div>
+      <div id="agent-profile-pill" class="badge badge-info" style="font-size:0.9rem; padding:6px 12px;">
+        Agent: Suresh Kumar
+      </div>
+    </div>
+
+    <!-- Assigned Orders List -->
+    <div id="agent-orders-view">
+      <h3 style="margin-bottom:16px;">Assigned Delivery Runs for Today</h3>
+      <div id="assigned-orders-container" class="grid grid-cols-2">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Doorstep Inspection Active Workflow -->
+    <div id="inspection-view" class="card" style="display:none; margin-top:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:14px; margin-bottom:20px;">
+        <div>
+          <span style="font-size:0.85rem; color:var(--text-muted);">Active Doorstep Audit:</span>
+          <h2 id="inspect-order-number" style="font-size:1.4rem;">#RV-20261108-7741</h2>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="closeInspection()">✕ Cancel & Return</button>
+      </div>
+
+      <!-- Customer & Delivery Summary -->
+      <div class="grid grid-cols-2" style="background:var(--bg-main); padding:16px; border-radius:var(--radius-md); margin-bottom:24px;">
+        <div>
+          <span style="font-size:0.8rem; color:var(--text-muted); display:block;">Customer:</span>
+          <b id="inspect-customer-name">Rohit Sharma</b> (<span id="inspect-customer-phone">9876543210</span>)
+          <p id="inspect-address" style="font-size:0.85rem; color:var(--text-muted); margin:4px 0 0;">
+            Flat 402, Green Glen Layout, Bellandur, Bengaluru
+          </p>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-size:0.8rem; color:var(--text-muted); display:block;">New Product Delivering:</span>
+          <b id="inspect-product-title">Apple iPhone 15 Pro (256 GB)</b>
+          <div style="font-size:1.15rem; font-weight:800; color:var(--primary); margin-top:4px;">
+            Cash to Collect: <span id="inspect-cash-due">₹1,04,900</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trade-In Specification Comparison Card -->
+      <div class="card" style="border:1px solid #fed7aa; background:#fffaf0; margin-bottom:24px;">
+        <h4 style="color:#c2410c; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+          <span>🔍</span> Declared Trade-In Information (Customer Self-Assessment)
+        </h4>
+        <div class="grid grid-cols-3" style="font-size:0.9rem;">
+          <div>
+            <span style="color:var(--text-muted); display:block;">Device Model:</span>
+            <b id="inspect-declared-device">Apple iPhone 13</b>
+          </div>
+          <div>
+            <span style="color:var(--text-muted); display:block;">Declared IMEI:</span>
+            <b id="inspect-declared-imei" style="letter-spacing:1px;">358941094827103</b>
+          </div>
+          <div>
+            <span style="color:var(--text-muted); display:block;">Declared Grade:</span>
+            <span id="inspect-declared-grade" class="badge badge-success">Grade B</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inspection Checklist -->
+      <h3 style="margin-bottom:16px;">Physical Verification Checklist</h3>
+      
+      <div class="form-group">
+        <label class="form-label">1. Physical IMEI Verification (Dial *#06# on customer's phone)</label>
+        <div style="display:flex; gap:16px; align-items:center;">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="radio" name="chk-imei" value="MATCH" checked onchange="updateInspectionOutcome()">
+            <span style="font-weight:600; color:var(--success);">✓ Exact IMEI Match</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="radio" name="chk-imei" value="MISMATCH" onchange="updateInspectionOutcome()">
+            <span style="font-weight:600; color:var(--danger);">✗ IMEI Mismatch / Altered</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">2. Actual Physical Condition Grade Audited</label>
+        <select id="inspect-actual-grade" class="form-control" onchange="updateInspectionOutcome()">
+          <option value="GRADE_A">Grade A (Flawless - Like New)</option>
+          <option value="GRADE_B" selected>Grade B (Good - Minor Micro-scratches)</option>
+          <option value="GRADE_C">Grade C (Average - Noticeable Dents/Scuffs)</option>
+          <option value="GRADE_D">Grade D (Defective / Cracked Glass)</option>
+        </select>
+      </div>
+
+      <!-- Mismatch Reason Field (Shown if mismatch detected) -->
+      <div id="mismatch-fields" style="display:none; background:var(--danger-light); padding:16px; border-radius:var(--radius-md); margin-bottom:20px; border:1px solid #fecaca;">
+        <h4 style="color:var(--danger); margin-bottom:10px;">⚠️ Condition Discrepancy Detected</h4>
+        
+        <div class="form-group">
+          <label class="form-label">Primary Reason Code</label>
+          <select id="inspect-mismatch-reason" class="form-control">
+            <option value="SCREEN_DAMAGE_MISMATCH">Screen Crack / Deep Scratches Not Declared</option>
+            <option value="HOUSING_DAMAGE_MISMATCH">Heavy Body Dents / Bent Frame</option>
+            <option value="IMEI_SERIAL_MISMATCH">Physical IMEI Does Not Match Listing</option>
+            <option value="BATTERY_HEALTH_BELOW_80">Battery Health Degraded Below 80%</option>
+            <option value="FAKE_OR_CLONE_DEVICE">Counterfeit / Replicant Device</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mandatory Adjustment Cash to Collect from Customer:</label>
+          <input type="number" id="inspect-extra-cash" class="form-control" value="0">
+          <span style="font-size:0.8rem; color:#991b1b;">
+            Customer must pay this difference via UPI/Cash to receive new product because points discount is revoked.
+          </span>
+        </div>
+      </div>
+
+      <!-- Doorstep Proof Photo Upload -->
+      <div class="form-group">
+        <label class="form-label">3. Inspector Proof Photos (Front screen and damaged area)</label>
+        <input type="file" id="inspect-photo-input" accept="image/*" class="form-control" onchange="uploadAgentProof(this)">
+        <div id="inspect-photo-preview" style="display:flex; gap:10px; margin-top:8px;"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">4. Inspection Notes</label>
+        <textarea id="inspect-notes" class="form-control" rows="2" placeholder="e.g. Device powers on normally, micro scratches on bezel match Grade B..."></textarea>
+      </div>
+
+      <!-- Handover Secret OTP Verification -->
+      <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:var(--radius-md); padding:16px; margin:24px 0;">
+        <label class="form-label" style="color:#92400e; font-weight:800;">
+          5. Customer Secret Handover OTP (Mandatory for Handover)
+        </label>
+        <p style="font-size:0.82rem; color:#b45309; margin-bottom:10px;">
+          Ask the customer to open their ReVolt order screen and read out their 4-digit secret OTP.
+        </p>
+        <input type="text" id="inspect-handover-otp" class="form-control" placeholder="Enter 4-digit code (e.g. 4829)" style="max-width:240px; font-size:1.2rem; letter-spacing:4px; font-weight:700;">
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; gap:16px;">
+        <button id="btn-submit-inspection" class="btn btn-primary btn-lg" style="flex:1;" onclick="submitInspectionReport()">
+          ✓ Verify Trade-In & Complete Delivery
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/agent.js"></script>
+</body>
+</html>

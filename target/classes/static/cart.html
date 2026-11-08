@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart - ReVolt</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="container" style="padding: 40px 20px; max-width: 1000px;">
+    
+    <h1 style="margin-bottom:24px;">Your Shopping Cart</h1>
+
+    <div class="grid grid-cols-3" style="align-items:start; gap:30px;">
+      
+      <!-- Cart Items List (2 cols) -->
+      <div style="grid-column: span 2;" class="card" id="cart-items-container">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Order & Points Redemption Summary (1 col) -->
+      <div class="card" style="position:sticky; top:90px;">
+        <h3 style="margin-bottom:16px;">Order Summary</h3>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="color:var(--text-muted);">Cart Subtotal:</span>
+          <span id="summary-subtotal" style="font-weight:600;">₹0</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="color:var(--text-muted);">Doorstep Shipping:</span>
+          <span style="color:var(--success); font-weight:600;">FREE</span>
+        </div>
+
+        <!-- Linked Trade-In Device Selection -->
+        <div style="margin:16px 0; padding-top:16px; border-top:1px solid var(--border-color);">
+          <label class="form-label" style="font-size:0.85rem;">Linked Trade-In Device for Doorstep Swap:</label>
+          <select id="cart-tradein-select" class="form-control" style="font-size:0.85rem;" onchange="onTradeInSelectChange()">
+            <option value="">No Trade-In (Buy without swap)</option>
+          </select>
+        </div>
+
+        <!-- Points Redemption Slider -->
+        <div style="background:var(--bg-main); padding:16px; border-radius:var(--radius-md); margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-weight:700; font-size:0.9rem;">Redeem Points:</span>
+            <span id="slider-points-val" class="points-pill" style="padding:2px 8px; font-size:0.8rem;">0 pts</span>
+          </div>
+          
+          <input type="range" id="points-slider" min="0" max="0" value="0" step="100" style="width:100%;" oninput="updatePointsRedemption()">
+          
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+            <span>0</span>
+            <span id="slider-max-hint">Max: 0 pts (30% Cap)</span>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:16px; color:var(--primary); font-weight:700;">
+          <span>Points Discount:</span>
+          <span id="summary-discount">- ₹0</span>
+        </div>
+
+        <hr style="border:0; border-top:1px solid var(--border-color); margin-bottom:16px;">
+
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:20px;">
+          <span style="font-size:1.1rem; font-weight:700;">Cash to Pay:</span>
+          <span id="summary-final-total" style="font-size:1.6rem; font-weight:800; color:var(--text-main);">₹0</span>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-lg" onclick="proceedToCheckout()">
+          Proceed to Checkout &rarr;
+        </button>
+
+        <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:10px;">
+          🔒 Trade-in points remain on hold until verified at doorstep delivery.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/cart.js"></script>
+</body>
+</html>

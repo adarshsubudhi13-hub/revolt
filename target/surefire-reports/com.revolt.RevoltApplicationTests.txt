@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.revolt.RevoltApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.15 s -- in com.revolt.RevoltApplicationTests

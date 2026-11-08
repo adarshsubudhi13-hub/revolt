@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trade-In Your Device - ReVolt Instant Valuation</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="container" style="max-width: 900px; padding: 40px 20px;">
+    
+    <div style="text-align:center; margin-bottom:30px;">
+      <h1>Device Valuation & Trade-In Wizard</h1>
+      <p style="color:var(--text-muted);">
+        Answer a few questions about your device condition, upload verification photos, and lock in your price for 7 days.
+      </p>
+    </div>
+
+    <!-- Wizard Steps Indicator -->
+    <div class="wizard-steps">
+      <div class="wizard-step active" id="step-tab-1">
+        <div class="step-circle">1</div>
+        <div class="step-label">Device Info</div>
+      </div>
+      <div class="wizard-step" id="step-tab-2">
+        <div class="step-circle">2</div>
+        <div class="step-label">Condition</div>
+      </div>
+      <div class="wizard-step" id="step-tab-3">
+        <div class="step-circle">3</div>
+        <div class="step-label">Accessories</div>
+      </div>
+      <div class="wizard-step" id="step-tab-4">
+        <div class="step-circle">4</div>
+        <div class="step-label">Photos</div>
+      </div>
+      <div class="wizard-step" id="step-tab-5">
+        <div class="step-circle">5</div>
+        <div class="step-label">Lock Price</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Device Specs -->
+    <div id="step-1" class="card">
+      <h3 style="margin-bottom:20px;">Step 1: Select Your Device</h3>
+      <div class="grid grid-cols-2">
+        <div class="form-group">
+          <label class="form-label">Device Category</label>
+          <select id="tradein-category" class="form-control" onchange="onCategoryChanged()">
+            <option value="Smartphones">Smartphones</option>
+            <option value="Laptops">Laptops</option>
+            <option value="Tablets">Tablets</option>
+            <option value="Audio">Audio & Headphones</option>
+            <option value="Wearables">Wearables & Smartwatches</option>
+            <option value="Gaming">Gaming Consoles</option>
+            <option value="Cameras">Cameras & Drones</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Brand</label>
+          <select id="tradein-brand" class="form-control" onchange="updateBrandModels()">
+            <option value="Apple">Apple</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Model</label>
+          <select id="tradein-model" class="form-control">
+            <option value="iPhone 13">iPhone 13</option>
+            <option value="iPhone 14">iPhone 14</option>
+            <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Storage / RAM Variant</label>
+          <select id="tradein-variant" class="form-control">
+            <option value="128 GB">128 GB</option>
+            <option value="256 GB">256 GB</option>
+            <option value="512 GB">512 GB</option>
+            <option value="1 TB">1 TB</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Device IMEI or Serial Number (Dial *#06# to find it)</label>
+        <input type="text" id="tradein-imei" class="form-control" placeholder="15-digit IMEI number" maxlength="15">
+        <span style="font-size:0.8rem; color:var(--text-muted);">Verified at doorstep by delivery agent to prevent fraud.</span>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button class="btn btn-primary" onclick="goToStep(2)">Next: Device Condition &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Condition Questionnaire -->
+    <div id="step-2" class="card" style="display:none;">
+      <h3 style="margin-bottom:20px;">Step 2: Condition Self-Assessment</h3>
+      
+      <div class="form-group">
+        <label class="form-label">How old is your device?</label>
+        <select id="tradein-age" class="form-control">
+          <option value="4">Less than 6 months (Under Brand Warranty)</option>
+          <option value="10" selected>6 to 12 months</option>
+          <option value="18">12 to 24 months</option>
+          <option value="30">More than 24 months</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Display & Touch Condition</label>
+        <select id="cond-screen" class="form-control">
+          <option value="FLAWLESS">Flawless: Zero scratches, no dead pixels, 100% touch responsive</option>
+          <option value="MINOR">Minor: Few light hairline scratches visible only under direct light</option>
+          <option value="CRACKED">Cracked: Glass crack or deep visible scratches, but display works</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Body & Housing Condition</label>
+        <select id="cond-body" class="form-control">
+          <option value="FLAWLESS">Flawless: No dents, no chips, pristine edges</option>
+          <option value="MINOR">Minor: 1 or 2 minor edge scuffs, no heavy dents</option>
+          <option value="DENTED">Noticeable: Deep corner dents or discoloration</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Functional Health & Battery</label>
+        <select id="cond-battery" class="form-control">
+          <option value="EXCELLENT">Battery health >= 85%, camera, WiFi, FaceID/TouchID 100% functional</option>
+          <option value="GOOD">Battery health 80-84%, all functional sensors working</option>
+          <option value="SERVICED">Battery service recommended (< 80%) or minor speaker issue</option>
+        </select>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:20px;">
+        <button class="btn btn-secondary" onclick="goToStep(1)">&larr; Back</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Next: Accessories &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Accessories -->
+    <div id="step-3" class="card" style="display:none;">
+      <h3 style="margin-bottom:20px;">Step 3: Accessories Checklist (Earn Bonus Points!)</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">
+        Bundling authentic accessories increases your trade-in value by up to 10%!
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
+        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <input type="checkbox" id="acc-box" style="width:18px; height:18px;">
+          <span>Original Manufacturer Packaging Box (+3% Bonus)</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <input type="checkbox" id="acc-charger" style="width:18px; height:18px;">
+          <span>Original Functional Charger & Cable (+4% Bonus)</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <input type="checkbox" id="acc-bill" style="width:18px; height:18px;">
+          <span>Valid Tax Invoice / Purchase Bill with Matching Serial (+3% Bonus)</span>
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:space-between;">
+        <button class="btn btn-secondary" onclick="goToStep(2)">&larr; Back</button>
+        <button class="btn btn-primary" onclick="goToStep(4)">Next: Photo Guide &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Smart Guided Photo Upload -->
+    <div id="step-4" class="card" style="display:none;">
+      <h3 style="margin-bottom:12px;">Step 4: Smart Verification Photos</h3>
+      <p style="color:var(--text-muted); margin-bottom:20px;">
+        Upload clean, well-lit photos. These will be used for the doorstep mismatch comparison check.
+      </p>
+
+      <div class="grid grid-cols-2" style="gap:16px;">
+        <div class="card" style="padding:14px; text-align:center;">
+          <div style="font-weight:600; margin-bottom:8px;">1. Front (Screen On)</div>
+          <input type="file" id="file-front" accept="image/*" class="form-control" onchange="uploadPhoto('FRONT', this)">
+          <div id="preview-front" style="margin-top:8px; font-size:0.8rem; color:var(--text-muted);">No image chosen</div>
+        </div>
+
+        <div class="card" style="padding:14px; text-align:center;">
+          <div style="font-weight:600; margin-bottom:8px;">2. Back Cover & Camera</div>
+          <input type="file" id="file-back" accept="image/*" class="form-control" onchange="uploadPhoto('BACK', this)">
+          <div id="preview-back" style="margin-top:8px; font-size:0.8rem; color:var(--text-muted);">No image chosen</div>
+        </div>
+
+        <div class="card" style="padding:14px; text-align:center;">
+          <div style="font-weight:600; margin-bottom:8px;">3. Sides & Charging Port</div>
+          <input type="file" id="file-sides" accept="image/*" class="form-control" onchange="uploadPhoto('SIDES', this)">
+          <div id="preview-sides" style="margin-top:8px; font-size:0.8rem; color:var(--text-muted);">No image chosen</div>
+        </div>
+
+        <div class="card" style="padding:14px; text-align:center;">
+          <div style="font-weight:600; margin-bottom:8px;">4. About / IMEI Screen</div>
+          <input type="file" id="file-imei" accept="image/*" class="form-control" onchange="uploadPhoto('IMEI_SCREEN', this)">
+          <div id="preview-imei" style="margin-top:8px; font-size:0.8rem; color:var(--text-muted);">No image chosen</div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:24px;">
+        <button class="btn btn-secondary" onclick="goToStep(3)">&larr; Back</button>
+        <button class="btn btn-primary" onclick="calculateFinalQuote()">Review Quote & Lock Price &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: Final Quote & Price Lock -->
+    <div id="step-5" class="card" style="display:none; text-align:center;">
+      <span class="badge badge-success" style="margin-bottom:12px;">🔒 7-Day Instant Price Lock Guaranteed</span>
+      <h2 style="font-size:2rem; margin-bottom:8px;">Your Trade-In Valuation Quote</h2>
+      <p style="color:var(--text-muted); margin-bottom:24px;">
+        This guaranteed quote is locked for 7 days (168 hours). No price drops while you shop!
+      </p>
+
+      <div style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:30px; max-width:550px; margin:0 auto 30px; text-align:left;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="color:var(--text-muted);">Device:</span>
+          <b id="quote-device-name">Apple iPhone 13 (128GB)</b>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="color:var(--text-muted);">Calculated Grade:</span>
+          <span id="quote-grade-badge" class="badge badge-success">Grade A</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="color:var(--text-muted);">Catalog Base Value:</span>
+          <span id="quote-base-val">₹52,000</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="color:var(--text-muted);">Age & Condition Multipliers:</span>
+          <span id="quote-multipliers">-25%</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+          <span style="color:var(--text-muted);">Accessory Bundle Bonus:</span>
+          <span id="quote-acc-bonus" style="color:var(--success); font-weight:600;">+₹3,600 (10%)</span>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--border-color); margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <span style="font-size:0.85rem; color:var(--text-muted); display:block;">Instant Trade-In Credit:</span>
+            <span id="quote-final-amount" style="font-size:1.8rem; font-weight:800; color:var(--primary);">₹38,500</span>
+          </div>
+          <div class="points-pill" style="font-size:1.1rem; padding:8px 16px;">
+            💎 <span id="quote-final-points">38,500</span> pts
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:16px;">
+        <button class="btn btn-secondary" onclick="goToStep(4)">&larr; Edit Details</button>
+        <button class="btn btn-primary btn-lg" onclick="submitFinalListing()">
+          ⚡ Accept Quote & Credit to Wallet
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/tradein.js"></script>
+</body>
+</html>

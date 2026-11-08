@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout & Doorstep Swap - ReVolt</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="container" style="padding: 40px 20px; max-width: 900px;">
+    
+    <h1 style="margin-bottom:24px;">Secure Checkout & Swap Delivery</h1>
+
+    <div class="grid grid-cols-3" style="gap:30px; align-items:start;">
+      
+      <!-- Shipping Address Form (2 cols) -->
+      <div style="grid-column: span 2;" class="card">
+        <h3 style="margin-bottom:16px;">1. Doorstep Delivery & Inspection Address</h3>
+        
+        <div class="grid grid-cols-2">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="ship-name" class="form-control" value="Rohit Sharma">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number (For Agent Contact)</label>
+            <input type="text" id="ship-phone" class="form-control" value="9876543210">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">House / Flat / Street Address</label>
+          <input type="text" id="ship-address" class="form-control" value="Flat 402, Green Glen Layout, Bellandur">
+        </div>
+
+        <div class="grid grid-cols-3">
+          <div class="form-group">
+            <label class="form-label">City</label>
+            <input type="text" id="ship-city" class="form-control" value="Bengaluru">
+          </div>
+          <div class="form-group">
+            <label class="form-label">State</label>
+            <input type="text" id="ship-state" class="form-control" value="Karnataka">
+          </div>
+          <div class="form-group">
+            <label class="form-label">PIN Code</label>
+            <input type="text" id="ship-pincode" class="form-control" value="560103">
+          </div>
+        </div>
+
+        <div style="background:var(--warning-light); border-left:4px solid var(--warning); padding:14px; border-radius:var(--radius-sm); margin-top:10px;">
+          <h4 style="font-size:0.92rem; color:#b45309; margin-bottom:4px;">Doorstep Verification Notice</h4>
+          <p style="font-size:0.82rem; color:#92400e; margin:0;">
+            The delivery executive will deliver your new item and concurrently inspect your old device. Ensure the trade-in phone is charged and ready with screen unlocked for IMEI check.
+          </p>
+        </div>
+      </div>
+
+      <!-- Payment & Order Confirm (1 col) -->
+      <div class="card">
+        <h3 style="margin-bottom:16px;">2. Payment</h3>
+
+        <div style="font-size:0.9rem; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <span style="color:var(--text-muted);">Order Total:</span>
+            <span id="chk-subtotal">₹0</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; color:var(--primary); font-weight:700;">
+            <span>Trade-In Points (Hold):</span>
+            <span id="chk-points">- ₹0</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <span style="color:var(--text-muted);">Delivery:</span>
+            <span style="color:var(--success);">FREE</span>
+          </div>
+        </div>
+
+        <hr style="border:0; border-top:1px solid var(--border-color); margin-bottom:14px;">
+
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:18px;">
+          <span style="font-size:1.1rem; font-weight:700;">Balance Due:</span>
+          <span id="chk-balance" style="font-size:1.5rem; font-weight:800; color:var(--text-main);">₹0</span>
+        </div>
+
+        <!-- Simulated Razorpay Button -->
+        <button class="btn btn-primary btn-block btn-lg" onclick="openRazorpayModal()">
+          Pay with Razorpay (Test)
+        </button>
+
+        <div style="text-align:center; margin-top:12px; font-size:0.75rem; color:var(--text-muted);">
+          🔒 256-bit SSL Encrypted &bull; Razorpay Sandbox Mode
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Simulated Razorpay Payment Modal -->
+  <div id="razorpay-modal" class="modal-overlay">
+    <div class="modal" style="max-width:440px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.4rem;">💳</span>
+          <b>Razorpay Test Checkout</b>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="closeRazorpayModal()">✕</button>
+      </div>
+
+      <div style="text-align:center; margin-bottom:16px;">
+        <span style="font-size:0.85rem; color:var(--text-muted);">Amount to Pay Online</span>
+        <div id="modal-pay-amount" style="font-size:1.8rem; font-weight:800; color:var(--primary);">₹0</div>
+      </div>
+
+      <div style="background:var(--bg-main); padding:14px; border-radius:var(--radius-md); margin-bottom:20px;">
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <button class="btn btn-primary btn-sm" style="flex:1;">UPI / QR</button>
+          <button class="btn btn-secondary btn-sm" style="flex:1;">Cards</button>
+          <button class="btn btn-secondary btn-sm" style="flex:1;">NetBanking</button>
+        </div>
+        <div style="text-align:center; padding:10px 0;">
+          <div style="font-size:2rem; margin-bottom:6px;">📱</div>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Simulated Test Mode: Instant Successful Settlement</p>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" onclick="completeTestOrder()">
+        Authorize Payment & Place Order
+      </button>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script>
+    let checkoutSubtotal = 0;
+    let checkoutPoints = 0;
+    let checkoutTradeInId = null;
+
+    function initCheckout() {
+      const cart = JSON.parse(localStorage.getItem('revolt_cart') || '[]');
+      if (cart.length === 0) {
+        window.location.href = '/shop.html';
+        return;
+      }
+
+      checkoutSubtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      checkoutPoints = parseInt(sessionStorage.getItem('revolt_checkout_points') || '0');
+      checkoutTradeInId = sessionStorage.getItem('revolt_checkout_tradein') || null;
+
+      const cashBalance = Math.max(0, checkoutSubtotal - checkoutPoints);
+
+      document.getElementById('chk-subtotal').innerText = Revolt.formatRupees(checkoutSubtotal);
+      document.getElementById('chk-points').innerText = `- ${Revolt.formatRupees(checkoutPoints)}`;
+      document.getElementById('chk-balance').innerText = Revolt.formatRupees(cashBalance);
+      document.getElementById('modal-pay-amount').innerText = Revolt.formatRupees(cashBalance);
+
+      const user = Revolt.getUser();
+      if (user) {
+        document.getElementById('ship-name').value = user.fullName;
+        document.getElementById('ship-phone').value = user.phoneNumber;
+      }
+    }
+
+    function openRazorpayModal() {
+      document.getElementById('razorpay-modal').classList.add('active');
+    }
+
+    function closeRazorpayModal() {
+      document.getElementById('razorpay-modal').classList.remove('active');
+    }
+
+    async function completeTestOrder() {
+      const cart = JSON.parse(localStorage.getItem('revolt_cart') || '[]');
+      const item = cart[0]; // Primary product
+
+      const shippingAddress = {
+        name: document.getElementById('ship-name').value,
+        phone: document.getElementById('ship-phone').value,
+        address: document.getElementById('ship-address').value,
+        city: document.getElementById('ship-city').value,
+        state: document.getElementById('ship-state').value,
+        pincode: document.getElementById('ship-pincode').value
+      };
+
+      try {
+        const orderResp = await Revolt.request('/orders', {
+          method: 'POST',
+          body: JSON.stringify({
+            productId: item.id,
+            quantity: item.quantity,
+            tradeInDeviceId: checkoutTradeInId ? parseInt(checkoutTradeInId) : null,
+            pointsToRedeem: checkoutPoints,
+            shippingAddressJson: JSON.stringify(shippingAddress),
+            paymentMethod: 'RAZORPAY_TEST'
+          })
+        });
+
+        // Clear cart
+        localStorage.removeItem('revolt_cart');
+        sessionStorage.removeItem('revolt_checkout_points');
+        sessionStorage.removeItem('revolt_checkout_tradein');
+
+        // Update cached user points
+        const user = Revolt.getUser();
+        if (user) {
+          user.availablePoints = Math.max(0, (user.availablePoints || 0) - checkoutPoints);
+          user.heldPoints = (user.heldPoints || 0) + checkoutPoints;
+          localStorage.setItem('revolt_user', JSON.stringify(user));
+        }
+
+        RevoltUI.toast(`Order #${orderResp.orderNumber} successfully placed! Confirmation email sent.`, 'success');
+
+        closeRazorpayModal();
+        setTimeout(() => {
+          window.location.href = '/orders.html';
+        }, 1200);
+
+      } catch (err) {
+        closeRazorpayModal();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initCheckout);
+  </script>
+</body>
+</html>
